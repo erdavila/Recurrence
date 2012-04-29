@@ -1,0 +1,10 @@
+Each X days,
+	beginning at YYYY-MM-DD.
+
+Each X months,
+	Yth day (Y can be negative),
+	beginning at YYYY-MM.
+
+Each X months,
+	Yth WEEKDAY (Y can be negative. WEEKDAY is SUN, MON, TUE, ...),
+	beginning at YYYY-MM.
