@@ -5,13 +5,14 @@ import yearmonth
 
 DAY_OF_MONTH = 'DAY_OF_MONTH'
 
-SUN = SUNDAY = 'SUNDAY'
-MON = MONDAY = 'MONDAY'
-TUE = TUESDAY = 'TUESDAY'
-WED = WEDNESDAY = 'WEDNESDAY'
-THU = THURSDAY = 'THURSDAY'
-FRI = FRIDAY = 'FRIDAY'
-SAT = SATURDAY = 'SATURDAY'
+# Values returned by datetime.date.weekday()
+MON = MONDAY    = 0
+TUE = TUESDAY   = 1
+WED = WEDNESDAY = 2
+THU = THURSDAY  = 3
+FRI = FRIDAY    = 4
+SAT = SATURDAY  = 5
+SUN = SUNDAY    = 6
 
 FUTURE = +1
 PAST   = -1
@@ -77,9 +78,13 @@ class DaysBasedRecurrence(object):
 
 
 class MonthsBasedRecurrence(object):
+	
 	def __init__(self, anchor, period, ordinal, day=DAY_OF_MONTH):
 		if not isinstance(anchor, yearmonth.YearMonth):
 			raise ValueError('Invalid anchor instance: ' + repr(anchor))
+		
+		if day not in (DAY_OF_MONTH, SUN, MON, TUE, WED, THU, FRI, SAT):
+			raise ValueError('Invalid day: ' + repr(day))
 		
 		self.anchor = anchor
 		self.period = period
@@ -124,11 +129,16 @@ class MonthsBasedRecurrence(object):
 			yield occurrence
 	
 	def _date_for_yearmonth(self, ym):
-		if self.day != DAY_OF_MONTH: raise NotImplementedError()
-		if self.ordinal < 0:
-			return ym.get_last_day() + datetime.timedelta(days=self.ordinal+1)
+		if self.day == DAY_OF_MONTH:
+			if self.ordinal < 0:
+				return ym.get_last_day() + datetime.timedelta(days=self.ordinal+1)
+			else:
+				return ym.get_date(self.ordinal)
 		else:
-			return ym.get_date(self.ordinal)
+			if self.ordinal < 0: raise NotImplementedError()
+			first_day_of_week = ym.get_first_day().weekday()
+			day_of_month = (7 + self.day - first_day_of_week) % 7 + 1 + 7 * (self.ordinal - 1)
+			return ym.get_date(day_of_month)
 	
 	def __setattr__(self, attr, value):
 		if attr in ('anchor', 'period', 'ordinal', 'day') and hasattr(self, attr):
