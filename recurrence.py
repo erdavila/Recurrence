@@ -135,10 +135,17 @@ class MonthsBasedRecurrence(object):
 			else:
 				return ym.get_date(self.ordinal)
 		else:
-			if self.ordinal < 0: raise NotImplementedError()
-			first_day_of_week = ym.get_first_day().weekday()
-			day_of_month = (7 + self.day - first_day_of_week) % 7 + 1 + 7 * (self.ordinal - 1)
-			return ym.get_date(day_of_month)
+			if self.ordinal < 0:
+				last_date_of_month = ym.get_last_day()
+				last_day_of_week = last_date_of_month.weekday()
+				last_day_of_month = last_date_of_month.day
+				day_of_month = last_day_of_month  - (7 - self.day + last_day_of_week ) % 7 + 7 * (self.ordinal + 1)
+				return ym.get_date(day_of_month)
+			else:
+				first_day_of_week = ym.get_first_day().weekday()
+				first_day_of_month = 1
+				day_of_month = first_day_of_month + (7 + self.day - first_day_of_week) % 7 + 7 * (self.ordinal - 1)
+				return ym.get_date(day_of_month)
 	
 	def __setattr__(self, attr, value):
 		if attr in ('anchor', 'period', 'ordinal', 'day') and hasattr(self, attr):
