@@ -6,6 +6,7 @@ import recurrence
 
 
 class TestDaysBasedRecurrence(unittest.TestCase):
+	
 	def setUp(self):
 		self.dbr = recurrence.DaysBasedRecurrence(anchor=date(2012, 4, 7), period=3)
 
@@ -136,7 +137,6 @@ class TestDaysBasedRecurrence(unittest.TestCase):
 		self.assertEquals(self.dbr.get_occurrence_after(date(2012, 4, 14)), date(2012, 4, 16))
 		self.assertEquals(self.dbr.get_occurrence_after(date(2012, 4, 15)), date(2012, 4, 16))
 		self.assertEquals(self.dbr.get_occurrence_after(date(2012, 4, 16)), date(2012, 4, 19))
-		
 	
 	
 	def testGetGeneratorDefault(self):
@@ -217,14 +217,17 @@ class TestDaysBasedRecurrence(unittest.TestCase):
 
 
 class TestMonthsBasedRecurrence(unittest.TestCase):
+	
 	def setUp(self):
 		self.mbr = recurrence.MonthsBasedRecurrence(anchor=YearMonth(2012, 4), period=3, ordinal=7)
 
+	
 	def testAttributes(self):
 		self.assertEquals(self.mbr.anchor, date(2012, 4, 7))
 		self.assertEquals(self.mbr.period, 3)
 		self.assertEquals(self.mbr.ordinal, 7)
 		self.assertEquals(self.mbr.day, recurrence.DAY_OF_MONTH)
+	
 	
 	def testReadOnlyAttributes(self):
 		def set_anchor():
@@ -244,6 +247,7 @@ class TestMonthsBasedRecurrence(unittest.TestCase):
 		self.assertRaises(AttributeError, set_day)
 		
 		self.mbr.foo = 'bar'
+	
 	
 	def testComparisons(self):
 		# Equal
@@ -269,6 +273,12 @@ class TestMonthsBasedRecurrence(unittest.TestCase):
 		# Different recurrence base
 		self.assertFalse(self.mbr == recurrence.DaysBasedRecurrence(anchor=date(2012, 4, 7), period=3))
 		self.assertTrue( self.mbr != recurrence.DaysBasedRecurrence(anchor=date(2012, 4, 7), period=3))
+
+
+class TestMonthsBasedRecurrenceWithPositiveDayOfMonth(unittest.TestCase):
+	
+	def setUp(self):
+		self.mbr = recurrence.MonthsBasedRecurrence(anchor=YearMonth(2012, 4), period=3, ordinal=7)
 		
 	
 	def testGetOccurrence(self):
@@ -441,17 +451,17 @@ class TestMonthsBasedRecurrence(unittest.TestCase):
 
 
 '''
-class TestMonthsBasedRecurrenceWithNegativeOrdinal(unittest.TestCase):
+class TestMonthsBasedRecurrenceWithNegativeDayOfMonth(unittest.TestCase):
 	def setUp(self):
 		self.mbr = Recurrence.months_based(period=4, ordinal=-7).beginning_in(YearMonth(2012, 4))
 
 
-class TestMonthsBasedRecurrenceWithWeekday(unittest.TestCase):
+class TestMonthsBasedRecurrenceWithPositiveDayOfWeek(unittest.TestCase):
 	def setUp(self):
 		self.mbr = Recurrence.months_based(period=4, ordinal=3, day=TUESDAY).beginning_in(YearMonth(2012, 4))
 
 
-class TestMonthsBasedRecurrenceWithWeekdayAndNegativeOrdinal(unittest.TestCase):
+class TestMonthsBasedRecurrenceWithNegativeDayOfWeek(unittest.TestCase):
 	def setUp(self):
 		self.mbr = Recurrence.months_based(period=4, ordinal=-2, day=TUESDAY).beginning_in(YearMonth(2012, 4))
 
