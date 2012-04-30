@@ -87,49 +87,48 @@ class MonthsBasedRecurrence(object):
 		self.day = day
 	
 	def get_occurrence(self, number):
-		if self.ordinal < 1: raise NotImplementedError()
-		if self.day != DAY_OF_MONTH: raise NotImplementedError()
 		ym = self.anchor + number * self.period
-		return ym.get_date(self.ordinal)
+		return self._date_for_yearmonth(ym)
 	
 	def is_occurrence(self, candidate_occurrence):
-		if self.ordinal < 1: raise NotImplementedError()
-		if self.day != DAY_OF_MONTH: raise NotImplementedError()
-		if candidate_occurrence.day != self.ordinal:
-			return False
 		ym = yearmonth.YearMonth.from_date(candidate_occurrence)
 		delta = ym - self.anchor
-		return delta % self.period == 0
+		if delta % self.period != 0:
+			return False
+		else:
+			return self._date_for_yearmonth(ym) == candidate_occurrence
 	
 	def get_occurrence_number(self, occurrence):
-		if self.ordinal < 1: raise NotImplementedError()
-		if self.day != DAY_OF_MONTH: raise NotImplementedError()
-		if occurrence.day != self.ordinal:
-			raise ValueError('The date %r is not a valid occurrence' % occurrence)
 		ym = yearmonth.YearMonth.from_date(occurrence)
 		delta = ym - self.anchor
-		if delta % self.period == 0:
+		if delta % self.period == 0 and self._date_for_yearmonth(ym) == occurrence:
 			return delta // self.period
 		else:
 			raise ValueError('The date %r is not a valid occurrence' % occurrence)
 	
 	def get_occurrence_after(self, date):
-		if self.ordinal < 1: raise NotImplementedError()
-		if self.day != DAY_OF_MONTH: raise NotImplementedError()
 		ym = yearmonth.YearMonth.from_date(date)
 		delta = ym - self.anchor
 		remainder = delta % self.period
-		if remainder == 0:
-			if date.day >= self.ordinal:
-				ym += self.period
-		else:
+		if remainder != 0:
 			ym += self.period - remainder
-		return ym.get_date(self.ordinal)
+		occurrence = self._date_for_yearmonth(ym)
+		if remainder == 0 and occurrence <= date:
+			ym += self.period
+			occurrence = self._date_for_yearmonth(ym)
+		return occurrence
 	
 	def get_generator(self, first_occurrence_number=0, direction=FUTURE):
 		for number in itertools.count(start=first_occurrence_number, step=(-1 if direction < 0 else +1)):
 			occurrence = self.get_occurrence(number)
 			yield occurrence
+	
+	def _date_for_yearmonth(self, ym):
+		if self.day != DAY_OF_MONTH: raise NotImplementedError()
+		if self.ordinal < 0:
+			return ym.get_last_day() + datetime.timedelta(days=self.ordinal+1)
+		else:
+			return ym.get_date(self.ordinal)
 	
 	def __setattr__(self, attr, value):
 		if attr in ('anchor', 'period', 'ordinal', 'day') and hasattr(self, attr):

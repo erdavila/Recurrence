@@ -294,7 +294,7 @@ class TestMonthsBasedRecurrenceWithPositiveDayOfMonth(unittest.TestCase):
 	
 	
 	def testIsOccurrence(self):
-		self.assertTrue( self.mbr.is_occurrence(date(2012, 10,  7)))
+		self.assertTrue( self.mbr.is_occurrence(date(2011, 10,  7)))
 		self.assertFalse(self.mbr.is_occurrence(date(2011, 11,  7)))
 		self.assertFalse(self.mbr.is_occurrence(date(2011, 12,  7)))
 		
@@ -450,12 +450,178 @@ class TestMonthsBasedRecurrenceWithPositiveDayOfMonth(unittest.TestCase):
 				)
 
 
-'''
 class TestMonthsBasedRecurrenceWithNegativeDayOfMonth(unittest.TestCase):
 	def setUp(self):
-		self.mbr = Recurrence.months_based(period=4, ordinal=-7).beginning_in(YearMonth(2012, 4))
+		self.mbr = recurrence.MonthsBasedRecurrence(anchor=YearMonth(2012, 4), period=3, ordinal=-7)
+		
+	
+	def testGetOccurrence(self):
+		self.assertEquals(self.mbr.get_occurrence(-3), date(2011,  7, 25))
+		self.assertEquals(self.mbr.get_occurrence(-2), date(2011, 10, 25))
+		self.assertEquals(self.mbr.get_occurrence(-1), date(2012,  1, 25))
+		
+		self.assertEquals(self.mbr.get_occurrence( 0), date(2012,  4, 24))
+		
+		self.assertEquals(self.mbr.get_occurrence( 1), date(2012,  7, 25))
+		self.assertEquals(self.mbr.get_occurrence( 2), date(2012, 10, 25))
+		self.assertEquals(self.mbr.get_occurrence( 3), date(2013,  1, 25))
+	
+	
+	def testIsOccurrence(self):
+		self.assertTrue( self.mbr.is_occurrence(date(2011, 10, 25)))
+		self.assertFalse(self.mbr.is_occurrence(date(2011, 11, 24)))
+		self.assertFalse(self.mbr.is_occurrence(date(2011, 12, 25)))
+		
+		self.assertFalse(self.mbr.is_occurrence(date(2012,  1, 24)))
+		self.assertTrue( self.mbr.is_occurrence(date(2012,  1, 25)))
+		self.assertFalse(self.mbr.is_occurrence(date(2012,  1, 26)))
+		self.assertFalse(self.mbr.is_occurrence(date(2012,  2, 23)))
+		self.assertFalse(self.mbr.is_occurrence(date(2012,  3, 25)))
+		self.assertFalse(self.mbr.is_occurrence(date(2012,  4, 23)))
+		
+		self.assertTrue( self.mbr.is_occurrence(date(2012,  4, 24)))
+		
+		self.assertFalse(self.mbr.is_occurrence(date(2012,  4, 25)))
+		self.assertFalse(self.mbr.is_occurrence(date(2012,  5, 25)))
+		self.assertFalse(self.mbr.is_occurrence(date(2012,  6, 24)))
+		self.assertFalse(self.mbr.is_occurrence(date(2012,  7, 24)))
+		self.assertTrue( self.mbr.is_occurrence(date(2012,  7, 25)))
+		self.assertFalse(self.mbr.is_occurrence(date(2012,  7, 26)))
+		
+		self.assertFalse(self.mbr.is_occurrence(date(2012,  8, 25)))
+		self.assertFalse(self.mbr.is_occurrence(date(2012,  9, 24)))
+		self.assertTrue( self.mbr.is_occurrence(date(2012, 10, 25)))
+	
+	
+	def testGetOccurrenceNumber(self):
+		self.assertEquals(                    self.mbr.get_occurrence_number(date(2011, 10, 25)), -2)
+		self.assertRaises(ValueError, lambda: self.mbr.get_occurrence_number(date(2011, 11, 24)))
+		self.assertRaises(ValueError, lambda: self.mbr.get_occurrence_number(date(2011, 12, 25)))
+		
+		self.assertRaises(ValueError, lambda: self.mbr.get_occurrence_number(date(2012,  1, 24)))
+		self.assertEquals(                    self.mbr.get_occurrence_number(date(2012,  1, 25)), -1)
+		self.assertRaises(ValueError, lambda: self.mbr.get_occurrence_number(date(2012,  1, 26)))
+		self.assertRaises(ValueError, lambda: self.mbr.get_occurrence_number(date(2012,  2, 23)))
+		self.assertRaises(ValueError, lambda: self.mbr.get_occurrence_number(date(2012,  3, 25)))
+		self.assertRaises(ValueError, lambda: self.mbr.get_occurrence_number(date(2012,  4, 23)))
+		
+		self.assertEquals(                    self.mbr.get_occurrence_number(date(2012,  4, 24)),  0)
+		
+		self.assertRaises(ValueError, lambda: self.mbr.get_occurrence_number(date(2012,  4, 25)))
+		self.assertRaises(ValueError, lambda: self.mbr.get_occurrence_number(date(2012,  5, 25)))
+		self.assertRaises(ValueError, lambda: self.mbr.get_occurrence_number(date(2012,  6, 24)))
+		self.assertRaises(ValueError, lambda: self.mbr.get_occurrence_number(date(2012,  7, 24)))
+		self.assertEquals(                    self.mbr.get_occurrence_number(date(2012,  7, 25)),  1)
+		self.assertRaises(ValueError, lambda: self.mbr.get_occurrence_number(date(2012,  7, 26)))
+		
+		self.assertRaises(ValueError, lambda: self.mbr.get_occurrence_number(date(2012,  8, 25)))
+		self.assertRaises(ValueError, lambda: self.mbr.get_occurrence_number(date(2012,  9, 24)))
+		self.assertEquals(                    self.mbr.get_occurrence_number(date(2012, 10, 25)),  2)
+	
+	
+	def testGetOccurrenceAfter(self):
+		self.assertEquals(self.mbr.get_occurrence_after(date(2011, 10, 25)), date(2012,  1, 25))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2011, 11, 24)), date(2012,  1, 25))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2011, 12, 25)), date(2012,  1, 25))
+		
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  1, 24)), date(2012,  1, 25))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  1, 25)), date(2012,  4, 24))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  1, 26)), date(2012,  4, 24))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  2, 23)), date(2012,  4, 24))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  3, 25)), date(2012,  4, 24))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  4, 24)), date(2012,  7, 25))
+		
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  4, 25)), date(2012,  7, 25))
+		
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  4, 26)), date(2012,  7, 25))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  5, 25)), date(2012,  7, 25))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  6, 24)), date(2012,  7, 25))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  7, 24)), date(2012,  7, 25))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  7, 25)), date(2012, 10, 25))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  7, 26)), date(2012, 10, 25))
+		
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  8, 25)), date(2012, 10, 25))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  9, 24)), date(2012, 10, 25))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012, 10, 25)), date(2013,  1, 25))
+	
+	
+	def testGetGeneratorDefault(self):
+		EXPECTED = [
+			date(2012,  4, 24),
+			date(2012,  7, 25),
+			date(2012, 10, 25),
+			date(2013,  1, 25),
+			date(2013,  4, 24),
+			date(2013,  7, 25),
+			date(2013, 10, 25),
+			date(2014,  1, 25),
+			date(2014,  4, 24),
+			date(2014,  7, 25),
+		]
+		for occurrence, expected in izip(self.mbr.get_generator(), EXPECTED):
+			self.assertEquals(occurrence, expected,
+					'occurrence=%r, expected=%r' % (occurrence, expected)
+				)
+	
+	
+	def testGetGeneratorWithFirstPositive(self):
+		EXPECTED = [
+			date(2013,  1, 25),
+			date(2013,  4, 24),
+			date(2013,  7, 25),
+			date(2013, 10, 25),
+			date(2014,  1, 25),
+			date(2014,  4, 24),
+			date(2014,  7, 25),
+			date(2014, 10, 25),
+			date(2015,  1, 25),
+			date(2015,  4, 24),
+		]
+		generator = self.mbr.get_generator(first_occurrence_number=3)
+		for occurrence, expected in izip(generator, EXPECTED):
+			self.assertEquals(occurrence, expected,
+					'occurrence=%r, expected=%r' % (occurrence, expected)
+				)
+	
+	
+	def testGetGeneratorWithFirstNegative(self):
+		EXPECTED = [
+			date(2011,  7, 25),
+			date(2011, 10, 25),
+			date(2012,  1, 25),
+			date(2012,  4, 24),
+			date(2012,  7, 25),
+			date(2012, 10, 25),
+			date(2013,  1, 25),
+			date(2013,  4, 24),
+			date(2013,  7, 25),
+			date(2013, 10, 25),
+		]
+		generator = self.mbr.get_generator(first_occurrence_number=-3)
+		for occurrence, expected in izip(generator, EXPECTED):
+			self.assertEquals(occurrence, expected, 'occurrence=%r, expected=%r' % (occurrence, expected))
+	
+	
+	def testGetGeneratorWithDirection(self):
+		EXPECTED = [
+			date(2013,  1, 25),
+			date(2012, 10, 25),
+			date(2012,  7, 25),
+			date(2012,  4, 24),
+			date(2012,  1, 25),
+			date(2011, 10, 25),
+			date(2011,  7, 25),
+			date(2011,  4, 24),
+			date(2011,  1, 25),
+			date(2010, 10, 25),
+		]
+		generator = self.mbr.get_generator(first_occurrence_number=3, direction=recurrence.PAST)
+		for occurrence, expected in izip(generator, EXPECTED):
+			self.assertEquals(occurrence, expected,
+					'occurrence=%r, expected=%r' % (occurrence, expected)
+				)
 
-
+'''
 class TestMonthsBasedRecurrenceWithPositiveDayOfWeek(unittest.TestCase):
 	def setUp(self):
 		self.mbr = Recurrence.months_based(period=4, ordinal=3, day=TUESDAY).beginning_in(YearMonth(2012, 4))
