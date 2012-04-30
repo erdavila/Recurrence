@@ -114,6 +114,31 @@ class TestDaysBasedRecurrence(unittest.TestCase):
 		self.assertEquals(                    self.dbr.get_occurrence_number(date(2012, 4, 16)),  3)
 	
 	
+	def testGetOccurrenceAfter(self):
+		self.assertEquals(self.dbr.get_occurrence_after(date(2012, 3, 29)), date(2012, 4,  1))
+		self.assertEquals(self.dbr.get_occurrence_after(date(2012, 3, 30)), date(2012, 4,  1))
+		self.assertEquals(self.dbr.get_occurrence_after(date(2012, 3, 31)), date(2012, 4,  1))
+		self.assertEquals(self.dbr.get_occurrence_after(date(2012, 4,  1)), date(2012, 4,  4))
+		self.assertEquals(self.dbr.get_occurrence_after(date(2012, 4,  2)), date(2012, 4,  4))
+		self.assertEquals(self.dbr.get_occurrence_after(date(2012, 4,  3)), date(2012, 4,  4))
+		self.assertEquals(self.dbr.get_occurrence_after(date(2012, 4,  4)), date(2012, 4,  7))
+		self.assertEquals(self.dbr.get_occurrence_after(date(2012, 4,  5)), date(2012, 4,  7))
+		self.assertEquals(self.dbr.get_occurrence_after(date(2012, 4,  6)), date(2012, 4,  7))
+		
+		self.assertEquals(self.dbr.get_occurrence_after(date(2012, 4,  7)), date(2012, 4, 10))
+		
+		self.assertEquals(self.dbr.get_occurrence_after(date(2012, 4,  8)), date(2012, 4, 10))
+		self.assertEquals(self.dbr.get_occurrence_after(date(2012, 4,  9)), date(2012, 4, 10))
+		self.assertEquals(self.dbr.get_occurrence_after(date(2012, 4, 10)), date(2012, 4, 13))
+		self.assertEquals(self.dbr.get_occurrence_after(date(2012, 4, 11)), date(2012, 4, 13))
+		self.assertEquals(self.dbr.get_occurrence_after(date(2012, 4, 12)), date(2012, 4, 13))
+		self.assertEquals(self.dbr.get_occurrence_after(date(2012, 4, 13)), date(2012, 4, 16))
+		self.assertEquals(self.dbr.get_occurrence_after(date(2012, 4, 14)), date(2012, 4, 16))
+		self.assertEquals(self.dbr.get_occurrence_after(date(2012, 4, 15)), date(2012, 4, 16))
+		self.assertEquals(self.dbr.get_occurrence_after(date(2012, 4, 16)), date(2012, 4, 19))
+		
+	
+	
 	def testGetGeneratorDefault(self):
 		EXPECTED = [
 			date(2012, 4,  7),
@@ -308,6 +333,32 @@ class TestMonthsBasedRecurrence(unittest.TestCase):
 		self.assertRaises(ValueError, lambda: self.mbr.get_occurrence_number(date(2012,  8,  7)))
 		self.assertRaises(ValueError, lambda: self.mbr.get_occurrence_number(date(2012,  9,  7)))
 		self.assertEquals(                    self.mbr.get_occurrence_number(date(2012, 10,  7)),  2)
+	
+	
+	def testGetOccurrenceAfter(self):
+		self.assertEquals(self.mbr.get_occurrence_after(date(2011, 10,  7)), date(2012,  1,  7))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2011, 11,  7)), date(2012,  1,  7))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2011, 12,  7)), date(2012,  1,  7))
+		
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  1,  6)), date(2012,  1,  7))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  1,  7)), date(2012,  4,  7))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  1,  8)), date(2012,  4,  7))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  2,  7)), date(2012,  4,  7))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  3,  7)), date(2012,  4,  7))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  4,  6)), date(2012,  4,  7))
+		
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  4,  7)), date(2012,  7,  7))
+		
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  4,  8)), date(2012,  7,  7))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  5,  7)), date(2012,  7,  7))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  6,  7)), date(2012,  7,  7))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  7,  6)), date(2012,  7,  7))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  7,  7)), date(2012, 10,  7))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  7,  8)), date(2012, 10,  7))
+		
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  8,  7)), date(2012, 10,  7))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012,  9,  7)), date(2012, 10,  7))
+		self.assertEquals(self.mbr.get_occurrence_after(date(2012, 10,  7)), date(2013,  1,  7))
 	
 	
 	def testGetGeneratorDefault(self):

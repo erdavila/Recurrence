@@ -44,6 +44,15 @@ class DaysBasedRecurrence(object):
 		else:
 			raise ValueError('The date %r is not a valid occurrence' % occurrence)
 	
+	def get_occurrence_after(self, date):
+		delta = date - self.anchor
+		delta_days = delta.days
+		remainder = delta_days % self.period
+		delta_days += self.period - remainder
+		delta = datetime.timedelta(days=delta_days)
+		occurrence = self.anchor + delta
+		return occurrence
+		
 	def get_generator(self, first_occurrence_number=0, direction=FUTURE):
 		for number in itertools.count(start=first_occurrence_number, step=(-1 if direction < 0 else +1)):
 			occurrence = self.get_occurrence(number)
@@ -103,6 +112,19 @@ class MonthsBasedRecurrence(object):
 			return delta // self.period
 		else:
 			raise ValueError('The date %r is not a valid occurrence' % occurrence)
+	
+	def get_occurrence_after(self, date):
+		if self.ordinal < 1: raise NotImplementedError()
+		if self.day != DAY_OF_MONTH: raise NotImplementedError()
+		ym = yearmonth.YearMonth.from_date(date)
+		delta = ym - self.anchor
+		remainder = delta % self.period
+		if remainder == 0:
+			if date.day >= self.ordinal:
+				ym += self.period
+		else:
+			ym += self.period - remainder
+		return ym.get_date(self.ordinal)
 	
 	def get_generator(self, first_occurrence_number=0, direction=FUTURE):
 		for number in itertools.count(start=first_occurrence_number, step=(-1 if direction < 0 else +1)):
