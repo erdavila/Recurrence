@@ -1,0 +1,32 @@
+This is a library that implements rules for recurring events.
+These are the types of recurrence that the library implements:
+
+ 1) Days-based recurrence - events that happen once each some days.
+ 		E.g.:
+ 			* each other day.
+ 			* once each five days.
+ 			* once each two weeks.
+ 2) Months-based recurrence - events that happen once each some months.
+ 	2.1) Day-of-month-based - events that happen in the same day of month.
+ 		E.g.:
+ 			* every month on 1st.
+ 			* each other month on 15th.
+ 			* yearly, on 24th.
+ 	 	It is possible to define the day relative to the end of the month.
+ 		E.g.:
+ 			* each other month on the last day.
+ 			* each three months, on the 10th day to the end.
+ 	2.2) Day-of-week-based - events that happen in some day-of-week.
+ 		E.g.:
+ 			* every month on the second Tuesday.
+ 			* each other month on the fourth Wednesday.
+ 		It is possible to define the day relative to the end of the month.
+ 		E.g.:
+ 			* each month, on the last Saturday.
+ 			* each four months, on the second to last Sunday.
+ 
+ The rules need an anchor to be applied to. The anchor defines the first date or
+ period that will generate the first occurrence. This first occurrence has an
+ number zero, the following one has number one, and so on. Negative numbers are
+ also possible for occurrences before the anchor.
+ 
