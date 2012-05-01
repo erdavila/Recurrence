@@ -139,7 +139,7 @@ class TestDaysBasedRecurrence(unittest.TestCase):
 		self.assertEquals(self.dbr.get_occurrence_after(date(2012, 4, 16)), date(2012, 4, 19))
 	
 	
-	def testGetGeneratorDefault(self):
+	def testGenerateDefault(self):
 		EXPECTED = [
 			date(2012, 4,  7),
 			date(2012, 4, 10),
@@ -152,13 +152,13 @@ class TestDaysBasedRecurrence(unittest.TestCase):
 			date(2012, 5,  1),
 			date(2012, 5,  4),
 		]
-		for occurrence, expected in izip(self.dbr.get_generator(), EXPECTED):
+		for occurrence, expected in izip(self.dbr.generate(), EXPECTED):
 			self.assertEquals(occurrence, expected,
 					'occurrence=%r, expected=%r' % (occurrence, expected)
 				)
 	
 	
-	def testGetGeneratorWithFirstPositive(self):
+	def testGenerateWithFirstPositive(self):
 		EXPECTED = [
 			date(2012, 4, 16),
 			date(2012, 4, 19),
@@ -171,14 +171,14 @@ class TestDaysBasedRecurrence(unittest.TestCase):
 			date(2012, 5, 10),
 			date(2012, 5, 13),
 		]
-		generator = self.dbr.get_generator(first_occurrence_number=3)
+		generator = self.dbr.generate(first_occurrence_number=3)
 		for occurrence, expected in izip(generator, EXPECTED):
 			self.assertEquals(occurrence, expected,
 					'occurrence=%r, expected=%r' % (occurrence, expected)
 				)
 	
 	
-	def testGetGeneratorWithFirstNegative(self):
+	def testGenerateWithFirstNegative(self):
 		EXPECTED = [
 			date(2012, 3, 29),
 			date(2012, 4,  1),
@@ -191,12 +191,12 @@ class TestDaysBasedRecurrence(unittest.TestCase):
 			date(2012, 4, 22),
 			date(2012, 4, 25),
 		]
-		generator = self.dbr.get_generator(first_occurrence_number=-3)
+		generator = self.dbr.generate(first_occurrence_number=-3)
 		for occurrence, expected in izip(generator, EXPECTED):
 			self.assertEquals(occurrence, expected, 'occurrence=%r, expected=%r' % (occurrence, expected))
 	
 	
-	def testGetGeneratorWithDirection(self):
+	def testGenerateWithDirection(self):
 		EXPECTED = [
 			date(2012, 4, 16),
 			date(2012, 4, 13),
@@ -209,7 +209,7 @@ class TestDaysBasedRecurrence(unittest.TestCase):
 			date(2012, 3, 23),
 			date(2012, 3, 20),
 		]
-		generator = self.dbr.get_generator(first_occurrence_number=3, direction=recurrence.PAST)
+		generator = self.dbr.generate(first_occurrence_number=3, direction=recurrence.PAST)
 		for occurrence, expected in izip(generator, EXPECTED):
 			self.assertEquals(occurrence, expected,
 					'occurrence=%r, expected=%r' % (occurrence, expected)
@@ -371,7 +371,7 @@ class TestMonthsBasedRecurrenceWithPositiveDayOfMonth(unittest.TestCase):
 		self.assertEquals(self.mbr.get_occurrence_after(date(2012, 10,  7)), date(2013,  1,  7))
 	
 	
-	def testGetGeneratorDefault(self):
+	def testGenerateDefault(self):
 		EXPECTED = [
 			date(2012,  4,  7),
 			date(2012,  7,  7),
@@ -384,13 +384,13 @@ class TestMonthsBasedRecurrenceWithPositiveDayOfMonth(unittest.TestCase):
 			date(2014,  4,  7),
 			date(2014,  7,  7),
 		]
-		for occurrence, expected in izip(self.mbr.get_generator(), EXPECTED):
+		for occurrence, expected in izip(self.mbr.generate(), EXPECTED):
 			self.assertEquals(occurrence, expected,
 					'occurrence=%r, expected=%r' % (occurrence, expected)
 				)
 	
 	
-	def testGetGeneratorWithFirstPositive(self):
+	def testGenerateWithFirstPositive(self):
 		EXPECTED = [
 			date(2013,  1,  7),
 			date(2013,  4,  7),
@@ -403,14 +403,14 @@ class TestMonthsBasedRecurrenceWithPositiveDayOfMonth(unittest.TestCase):
 			date(2015,  1,  7),
 			date(2015,  4,  7),
 		]
-		generator = self.mbr.get_generator(first_occurrence_number=3)
+		generator = self.mbr.generate(first_occurrence_number=3)
 		for occurrence, expected in izip(generator, EXPECTED):
 			self.assertEquals(occurrence, expected,
 					'occurrence=%r, expected=%r' % (occurrence, expected)
 				)
 	
 	
-	def testGetGeneratorWithFirstNegative(self):
+	def testGenerateWithFirstNegative(self):
 		EXPECTED = [
 			date(2011,  7,  7),
 			date(2011, 10,  7),
@@ -423,11 +423,11 @@ class TestMonthsBasedRecurrenceWithPositiveDayOfMonth(unittest.TestCase):
 			date(2013,  7,  7),
 			date(2013, 10,  7),
 		]
-		for occurrence, expected in izip(self.mbr.get_generator(first_occurrence_number=-3), EXPECTED):
+		for occurrence, expected in izip(self.mbr.generate(first_occurrence_number=-3), EXPECTED):
 			self.assertEquals(occurrence, expected, 'occurrence=%r, expected=%r' % (occurrence, expected))
 	
 	
-	def testGetGeneratorWithDirection(self):
+	def testGenerateWithDirection(self):
 		EXPECTED = [
 			date(2013,  1,  7),
 			date(2012, 10,  7),
@@ -440,7 +440,7 @@ class TestMonthsBasedRecurrenceWithPositiveDayOfMonth(unittest.TestCase):
 			date(2011,  1,  7),
 			date(2010, 10,  7),
 		]
-		generator = self.mbr.get_generator(
+		generator = self.mbr.generate(
 				first_occurrence_number=3,
 				direction=recurrence.PAST
 			)
@@ -545,7 +545,7 @@ class TestMonthsBasedRecurrenceWithNegativeDayOfMonth(unittest.TestCase):
 		self.assertEquals(self.mbr.get_occurrence_after(date(2012, 10, 25)), date(2013,  1, 25))
 	
 	
-	def testGetGeneratorDefault(self):
+	def testGenerateDefault(self):
 		EXPECTED = [
 			date(2012,  4, 24),
 			date(2012,  7, 25),
@@ -558,13 +558,13 @@ class TestMonthsBasedRecurrenceWithNegativeDayOfMonth(unittest.TestCase):
 			date(2014,  4, 24),
 			date(2014,  7, 25),
 		]
-		for occurrence, expected in izip(self.mbr.get_generator(), EXPECTED):
+		for occurrence, expected in izip(self.mbr.generate(), EXPECTED):
 			self.assertEquals(occurrence, expected,
 					'occurrence=%r, expected=%r' % (occurrence, expected)
 				)
 	
 	
-	def testGetGeneratorWithFirstPositive(self):
+	def testGenerateWithFirstPositive(self):
 		EXPECTED = [
 			date(2013,  1, 25),
 			date(2013,  4, 24),
@@ -577,14 +577,14 @@ class TestMonthsBasedRecurrenceWithNegativeDayOfMonth(unittest.TestCase):
 			date(2015,  1, 25),
 			date(2015,  4, 24),
 		]
-		generator = self.mbr.get_generator(first_occurrence_number=3)
+		generator = self.mbr.generate(first_occurrence_number=3)
 		for occurrence, expected in izip(generator, EXPECTED):
 			self.assertEquals(occurrence, expected,
 					'occurrence=%r, expected=%r' % (occurrence, expected)
 				)
 	
 	
-	def testGetGeneratorWithFirstNegative(self):
+	def testGenerateWithFirstNegative(self):
 		EXPECTED = [
 			date(2011,  7, 25),
 			date(2011, 10, 25),
@@ -597,12 +597,12 @@ class TestMonthsBasedRecurrenceWithNegativeDayOfMonth(unittest.TestCase):
 			date(2013,  7, 25),
 			date(2013, 10, 25),
 		]
-		generator = self.mbr.get_generator(first_occurrence_number=-3)
+		generator = self.mbr.generate(first_occurrence_number=-3)
 		for occurrence, expected in izip(generator, EXPECTED):
 			self.assertEquals(occurrence, expected, 'occurrence=%r, expected=%r' % (occurrence, expected))
 	
 	
-	def testGetGeneratorWithDirection(self):
+	def testGenerateWithDirection(self):
 		EXPECTED = [
 			date(2013,  1, 25),
 			date(2012, 10, 25),
@@ -615,7 +615,7 @@ class TestMonthsBasedRecurrenceWithNegativeDayOfMonth(unittest.TestCase):
 			date(2011,  1, 25),
 			date(2010, 10, 25),
 		]
-		generator = self.mbr.get_generator(first_occurrence_number=3, direction=recurrence.PAST)
+		generator = self.mbr.generate(first_occurrence_number=3, direction=recurrence.PAST)
 		for occurrence, expected in izip(generator, EXPECTED):
 			self.assertEquals(occurrence, expected,
 					'occurrence=%r, expected=%r' % (occurrence, expected)
@@ -718,7 +718,7 @@ class TestMonthsBasedRecurrenceWithPositiveDayOfWeek(unittest.TestCase):
 		self.assertEquals(self.mbr.get_occurrence_after(date(2012, 12, 18)), date(2013,  4, 16))
 	
 	
-	def testGetGeneratorDefault(self):
+	def testGenerateDefault(self):
 		EXPECTED = [
 			date(2012,  4, 17),
 			date(2012,  8, 21),
@@ -731,13 +731,13 @@ class TestMonthsBasedRecurrenceWithPositiveDayOfWeek(unittest.TestCase):
 			date(2014, 12, 16),
 			date(2015,  4, 21),
 		]
-		for occurrence, expected in izip(self.mbr.get_generator(), EXPECTED):
+		for occurrence, expected in izip(self.mbr.generate(), EXPECTED):
 			self.assertEquals(occurrence, expected,
 					'occurrence=%r, expected=%r' % (occurrence, expected)
 				)
 	
 	
-	def testGetGeneratorWithFirstPositive(self):
+	def testGenerateWithFirstPositive(self):
 		EXPECTED = [
 			date(2013,  4, 16),
 			date(2013,  8, 20),
@@ -750,14 +750,14 @@ class TestMonthsBasedRecurrenceWithPositiveDayOfWeek(unittest.TestCase):
 			date(2015, 12, 15),
 			date(2016,  4, 19),
 		]
-		generator = self.mbr.get_generator(first_occurrence_number=3)
+		generator = self.mbr.generate(first_occurrence_number=3)
 		for occurrence, expected in izip(generator, EXPECTED):
 			self.assertEquals(occurrence, expected,
 					'occurrence=%r, expected=%r' % (occurrence, expected)
 				)
 	
 	
-	def testGetGeneratorWithFirstNegative(self):
+	def testGenerateWithFirstNegative(self):
 		EXPECTED = [
 			date(2011,  4, 19),
 			date(2011,  8, 16),
@@ -770,12 +770,12 @@ class TestMonthsBasedRecurrenceWithPositiveDayOfWeek(unittest.TestCase):
 			date(2013, 12, 17),
 			date(2014,  4, 15),
 		]
-		generator = self.mbr.get_generator(first_occurrence_number=-3)
+		generator = self.mbr.generate(first_occurrence_number=-3)
 		for occurrence, expected in izip(generator, EXPECTED):
 			self.assertEquals(occurrence, expected, 'occurrence=%r, expected=%r' % (occurrence, expected))
 	
 	
-	def testGetGeneratorWithDirection(self):
+	def testGenerateWithDirection(self):
 		EXPECTED = [
 			date(2013,  4, 16),
 			date(2012, 12, 18),
@@ -788,7 +788,7 @@ class TestMonthsBasedRecurrenceWithPositiveDayOfWeek(unittest.TestCase):
 			date(2010,  8, 17),
 			date(2010,  4, 20),
 		]
-		generator = self.mbr.get_generator(first_occurrence_number=3, direction=recurrence.PAST)
+		generator = self.mbr.generate(first_occurrence_number=3, direction=recurrence.PAST)
 		for occurrence, expected in izip(generator, EXPECTED):
 			self.assertEquals(occurrence, expected,
 					'occurrence=%r, expected=%r' % (occurrence, expected)
@@ -890,7 +890,7 @@ class TestMonthsBasedRecurrenceWithNegativeDayOfWeek(unittest.TestCase):
 		self.assertEquals(self.mbr.get_occurrence_after(date(2012, 12, 18)), date(2013,  4, 23))
 	
 	
-	def testGetGeneratorDefault(self):
+	def testGenerateDefault(self):
 		EXPECTED = [
 			date(2012,  4, 17),
 			date(2012,  8, 21),
@@ -903,13 +903,13 @@ class TestMonthsBasedRecurrenceWithNegativeDayOfWeek(unittest.TestCase):
 			date(2014, 12, 23),
 			date(2015,  4, 21),
 		]
-		for occurrence, expected in izip(self.mbr.get_generator(), EXPECTED):
+		for occurrence, expected in izip(self.mbr.generate(), EXPECTED):
 			self.assertEquals(occurrence, expected,
 					'occurrence=%r, expected=%r' % (occurrence, expected)
 				)
 	
 	
-	def testGetGeneratorWithFirstPositive(self):
+	def testGenerateWithFirstPositive(self):
 		EXPECTED = [
 			date(2013,  4, 23),
 			date(2013,  8, 20),
@@ -922,14 +922,14 @@ class TestMonthsBasedRecurrenceWithNegativeDayOfWeek(unittest.TestCase):
 			date(2015, 12, 22),
 			date(2016,  4, 19),
 		]
-		generator = self.mbr.get_generator(first_occurrence_number=3)
+		generator = self.mbr.generate(first_occurrence_number=3)
 		for occurrence, expected in izip(generator, EXPECTED):
 			self.assertEquals(occurrence, expected,
 					'occurrence=%r, expected=%r' % (occurrence, expected)
 				)
 	
 	
-	def testGetGeneratorWithFirstNegative(self):
+	def testGenerateWithFirstNegative(self):
 		EXPECTED = [
 			date(2011,  4, 19),
 			date(2011,  8, 23),
@@ -942,12 +942,12 @@ class TestMonthsBasedRecurrenceWithNegativeDayOfWeek(unittest.TestCase):
 			date(2013, 12, 24),
 			date(2014,  4, 22),
 		]
-		generator = self.mbr.get_generator(first_occurrence_number=-3)
+		generator = self.mbr.generate(first_occurrence_number=-3)
 		for occurrence, expected in izip(generator, EXPECTED):
 			self.assertEquals(occurrence, expected, 'occurrence=%r, expected=%r' % (occurrence, expected))
 	
 	
-	def testGetGeneratorWithDirection(self):
+	def testGenerateWithDirection(self):
 		EXPECTED = [
 			date(2013,  4, 23),
 			date(2012, 12, 18),
@@ -960,7 +960,7 @@ class TestMonthsBasedRecurrenceWithNegativeDayOfWeek(unittest.TestCase):
 			date(2010,  8, 24),
 			date(2010,  4, 20),
 		]
-		generator = self.mbr.get_generator(first_occurrence_number=3, direction=recurrence.PAST)
+		generator = self.mbr.generate(first_occurrence_number=3, direction=recurrence.PAST)
 		for occurrence, expected in izip(generator, EXPECTED):
 			self.assertEquals(occurrence, expected,
 					'occurrence=%r, expected=%r' % (occurrence, expected)

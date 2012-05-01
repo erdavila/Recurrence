@@ -54,7 +54,7 @@ class DaysBasedRecurrence(object):
 		occurrence = self.anchor + delta
 		return occurrence
 		
-	def get_generator(self, first_occurrence_number=0, direction=FUTURE):
+	def generate(self, first_occurrence_number=0, direction=FUTURE):
 		for number in itertools.count(start=first_occurrence_number, step=(-1 if direction < 0 else +1)):
 			occurrence = self.get_occurrence(number)
 			yield occurrence
@@ -123,7 +123,7 @@ class MonthsBasedRecurrence(object):
 			occurrence = self._date_for_yearmonth(ym)
 		return occurrence
 	
-	def get_generator(self, first_occurrence_number=0, direction=FUTURE):
+	def generate(self, first_occurrence_number=0, direction=FUTURE):
 		for number in itertools.count(start=first_occurrence_number, step=(-1 if direction < 0 else +1)):
 			occurrence = self.get_occurrence(number)
 			yield occurrence
