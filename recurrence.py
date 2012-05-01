@@ -25,6 +25,12 @@ class Recurrence(object):
 			occurrence = self.get_occurrence(number)
 			yield occurrence
 	
+	def generate_after(self, date, before=None):
+		occurrence = self.get_occurrence_after(date)
+		while before is None or occurrence < before:
+			yield occurrence
+			occurrence = self.get_occurrence_after(occurrence)
+	
 	def __ne__(self, other):
 		return not (self == other)
 
