@@ -18,7 +18,18 @@ FUTURE = +1
 PAST   = -1
 
 
-class DaysBasedRecurrence(object):
+class Recurrence(object):
+	
+	def generate(self, first_occurrence_number=0, direction=FUTURE):
+		for number in itertools.count(start=first_occurrence_number, step=(-1 if direction < 0 else +1)):
+			occurrence = self.get_occurrence(number)
+			yield occurrence
+	
+	def __ne__(self, other):
+		return not (self == other)
+
+
+class DaysBasedRecurrence(Recurrence):
 	
 	def __init__(self, anchor, period):
 		if not isinstance(anchor, datetime.date):
@@ -54,11 +65,6 @@ class DaysBasedRecurrence(object):
 		occurrence = self.anchor + delta
 		return occurrence
 		
-	def generate(self, first_occurrence_number=0, direction=FUTURE):
-		for number in itertools.count(start=first_occurrence_number, step=(-1 if direction < 0 else +1)):
-			occurrence = self.get_occurrence(number)
-			yield occurrence
-	
 	def __setattr__(self, attr, value):
 		if attr in ('anchor', 'period') and hasattr(self, attr):
 			raise AttributeError('Attribute ' + attr + ' cannot be set')
@@ -70,14 +76,11 @@ class DaysBasedRecurrence(object):
 				and self.period == other.period
 			)
 	
-	def __ne__(self, other):
-		return not (self == other)
-	
 	def __hash__(self):
 		return hash(self.anchor) ^ hash(self.period) 
 
 
-class MonthsBasedRecurrence(object):
+class MonthsBasedRecurrence(Recurrence):
 	
 	def __init__(self, anchor, period, ordinal, day=DAY_OF_MONTH):
 		if not isinstance(anchor, yearmonth.YearMonth):
@@ -123,11 +126,6 @@ class MonthsBasedRecurrence(object):
 			occurrence = self._date_for_yearmonth(ym)
 		return occurrence
 	
-	def generate(self, first_occurrence_number=0, direction=FUTURE):
-		for number in itertools.count(start=first_occurrence_number, step=(-1 if direction < 0 else +1)):
-			occurrence = self.get_occurrence(number)
-			yield occurrence
-	
 	def _date_for_yearmonth(self, ym):
 		if self.day == DAY_OF_MONTH:
 			if self.ordinal < 0:
@@ -159,9 +157,6 @@ class MonthsBasedRecurrence(object):
 			and self.ordinal == other.ordinal
 			and self.day == other.day
 		)
-	
-	def __ne__(self, other):
-		return not (self == other)
 	
 	def __hash__(self):
 		return hash(self.anchor) ^ hash(self.period) ^ hash(self.ordinal) ^ hash(self.day)  
